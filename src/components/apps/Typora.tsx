@@ -4,12 +4,26 @@ import { commonmark } from "@milkdown/preset-commonmark";
 import { gfm } from "@milkdown/preset-gfm";
 import { history } from "@milkdown/plugin-history";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import PasswordGate from "~/components/PasswordGate";
 
 const MilkdownEditor = () => {
   const { typoraMd, setTyporaMd } = useStore((state) => ({
     typoraMd: state.typoraMd,
     setTyporaMd: state.setTyporaMd
   }));
+  const token = sessionStorage.getItem("auth_token");
+
+  useEffect(() => {
+    const load = async () => {
+      if (!token) return;
+      const resp = await fetch(`/api/content?app=typora`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await resp.json();
+      if (data.content) setTyporaMd(data.content);
+    };
+    load();
+  }, [token, setTyporaMd]);
 
   useEditor((root) =>
     Editor.make()
@@ -25,7 +39,16 @@ const MilkdownEditor = () => {
             ) as HTMLDivElement;
             wrapper.onclick = () => editor?.focus();
           })
-          .markdownUpdated((_, markdown) => setTyporaMd(markdown));
+           .markdownUpdated(async (_, markdown) => {
+             setTyporaMd(markdown);
+             if (token) {
+               await fetch(`/api/content?app=typora`, {
+                 method: "PUT",
+                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                 body: JSON.stringify({ content: markdown })
+               });
+             }
+           });
 
         root.className =
           "typora bg-white dark:bg-gray-800 text-c-700 h-full overflow-y-scroll";
@@ -41,8 +64,12 @@ const MilkdownEditor = () => {
 
 export default function Typora() {
   return (
-    <MilkdownProvider>
-      <MilkdownEditor />
-    </MilkdownProvider>
+    <PasswordGate>
+      {({ token, profileId }) => (
+        <MilkdownProvider>
+          <MilkdownEditor />
+        </MilkdownProvider>
+      )}
+    </PasswordGate>
   );
 }

@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula, prism } from "react-syntax-highlighter/dist/esm/styles/prism";
 import bear from "~/configs/bear";
 import type { BearMdData } from "~/types";
+import RandomMlFact from "~/components/RandomMlFact";
 
 interface ContentProps {
   contentID: string;
@@ -229,6 +230,7 @@ const Bear = () => {
       </div>
       <div className="flex-1 overflow-auto" bg="gray-50 dark:gray-800">
         <Content contentID={state.contentID} contentURL={state.contentURL} />
+        {state.contentID === "highlights" && <RandomMlFact />}
       </div>
     </div>
   );

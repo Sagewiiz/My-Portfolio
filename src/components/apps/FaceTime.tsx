@@ -116,7 +116,7 @@ const FaceTime = () => {
   });
 
   return (
-    <div className="relative h-full">
+    <div className="relative h-full bg-zinc-900">
       <Sidebar
         state={state}
         onTake={() => {
@@ -134,20 +134,24 @@ const FaceTime = () => {
         }}
       />
 
-      <div className="h-full bg-zinc-800">
+      <div className="h-full bg-zinc-800 ml-74 flex">
         {!state.curImage ? (
           <Webcam
             mirrored={true}
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
+            className="w-full h-full object-cover"
             videoConstraints={{
               facingMode: "user",
-              aspectRatio: 1.7
+              width: 1280,
+              height: 720
             }}
           />
         ) : (
-          state.curImage && <img size-full src={state.curImage} alt="your-image" />
+          state.curImage && (
+            <img className="w-full h-full object-cover" src={state.curImage} alt="your-image" />
+          )
         )}
       </div>
     </div>

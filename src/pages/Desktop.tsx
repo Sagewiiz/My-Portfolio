@@ -171,6 +171,9 @@ export default function Desktop(props: MacActions) {
       showLaunchpad: false
     }));
 
+    // track recent apps
+    useStore.getState().addRecentApp(id);
+
     const minApps = state.minApps;
     // if the app has already been shown but minimized
     if (minApps[id]) {

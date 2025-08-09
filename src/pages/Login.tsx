@@ -4,7 +4,7 @@ import type { MacActions } from "~/types";
 
 export default function Login(props: MacActions) {
   const [password, setPassword] = useState("");
-  const [sign, setSign] = useState("Click to enter");
+  const [sign, setSign] = useState("Type 'meow' to enter");
   const dark = useStore((state) => state.dark);
 
   const keyPress = (e: React.KeyboardEvent) => {
@@ -17,11 +17,9 @@ export default function Login(props: MacActions) {
   };
 
   const loginHandle = () => {
-    if (user.password === "" || user.password === password) {
-      // not set password or password correct
+    if (user.password !== "" && user.password === password) {
       props.setLogin(true);
     } else if (password !== "") {
-      // password not null and incorrect
       setSign("Incorrect password");
     }
   };
@@ -34,7 +32,7 @@ export default function Login(props: MacActions) {
           dark ? wallpapers.night : wallpapers.day
         }) center/cover no-repeat`
       }}
-      onClick={() => loginHandle()}
+      onClick={() => {}}
     >
       <div className="inline-block w-auto relative top-1/2 -mt-40">
         {/* Avatar */}

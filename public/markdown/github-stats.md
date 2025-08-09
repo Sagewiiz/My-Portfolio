@@ -1,7 +1,24 @@
-# Github Stats
+# Highlights & Achievements
 
-My GitHub stats (powered by [github-readme-stats](https://github.com/anuraghazra/github-readme-stats)):
+## Achievements
 
-[![github stats](https://github-readme-stats.vercel.app/api?username=Sagewiiz&show_icons=true&hide_title=true&hide_border=true)](https://github.com/Sagewiiz)
+- 🏆 MLSS '25 – Selected for Amazon Machine Learning Summer School 2025.
+- 🏆 Hackathon Marathon – Participated in 15+ hackathons 
+- 🏆 Ex‑President – Rotaract Club of Bangalore Institute of Technology (2024–25).
 
-[![top langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Sagewiiz&layout=compact&hide_border=true)](https://github.com/Sagewiiz)
+## Tech Skills
+
+- 💻 Python: ▰▰▰▰▰▰▰▰▰▱ (Advanced)
+- 💻 C++: ▰▰▰▰▰▰▱▱▱▱ (Intermediate)
+- 💻 Machine Learning (Supervised/Unsupervised, model evaluation, deployment): ▰▰▰▰▰▰▰▰▱▱
+- 💻 AI (LLMs, rule‑based systems, intelligent agents, CV, task automation): ▰▰▰▰▰▰▰▱▱▱
+- 💻 Data Structures & Algorithms: ▰▰▰▰▰▰▰▱▱▱
+- 💻 Databases – SQL (MySQL): ▰▰▰▰▰▰▰▱▱▱
+- 💻 Databases – NoSQL (MongoDB, Redis): ▰▰▰▰▰▰▱▱▱▱
+- 💻 Tools – Prisma, Git/GitHub, Power BI, Power Platform: ▰▰▰▰▰▰▰▱▱▱
+
+## Events & Hackathons (selected)
+
+- SheCodes • AmBition • Flipkart Grid • Smart India Hackathon (SIH) • and many more.
+
+---

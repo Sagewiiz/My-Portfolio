@@ -9,6 +9,7 @@ export interface SystemSlice {
   bluetooth: boolean;
   airdrop: boolean;
   fullscreen: boolean;
+  recentApps: string[];
   toggleDark: () => void;
   toggleWIFI: () => void;
   toggleBluetooth: () => void;
@@ -16,6 +17,7 @@ export interface SystemSlice {
   toggleFullScreen: (v: boolean) => void;
   setVolume: (v: number) => void;
   setBrightness: (v: number) => void;
+  addRecentApp: (id: string) => void;
 }
 
 export const createSystemSlice: StateCreator<SystemSlice> = (set) => ({
@@ -29,6 +31,7 @@ export const createSystemSlice: StateCreator<SystemSlice> = (set) => ({
   bluetooth: true,
   airdrop: true,
   fullscreen: false,
+  recentApps: [],
   toggleDark: () =>
     set((state) => {
       const target = !state.dark;
@@ -45,5 +48,10 @@ export const createSystemSlice: StateCreator<SystemSlice> = (set) => ({
       return { fullscreen: v };
     }),
   setVolume: (v) => set(() => ({ volume: v })),
-  setBrightness: (v) => set(() => ({ brightness: v }))
+  setBrightness: (v) => set(() => ({ brightness: v })),
+  addRecentApp: (id) =>
+    set((state) => {
+      const list = [id, ...state.recentApps.filter((x) => x !== id)].slice(0, 7);
+      return { recentApps: list };
+    })
 });

@@ -14,11 +14,11 @@ const bear: BearData[] = [
         excerpt: "Brief intro and contact details."
       },
       {
-        id: "github-stats",
-        title: "GitHub Stats",
+        id: "highlights",
+        title: "Highlights",
         file: "markdown/github-stats.md",
-        icon: "i-icon-park-outline:github",
-        excerpt: "Some quick stats from my GitHub profile."
+        icon: "i-ri:star-smile-line",
+        excerpt: "A quick look into my profile."
       },
       {
         id: "about-site",
@@ -59,12 +59,12 @@ const bear: BearData[] = [
         link: "https://github.com/Sagewiiz/PathFinder"
       },
       {
-        id: "techxcelerate",
-        title: "TechXcelerate",
-        file: "https://raw.githubusercontent.com/Sagewiiz/TechXcelerate/main/README.md",
-        icon: "i-simple-icons:bootstrap",
-        excerpt: "AI theme/site work.",
-        link: "https://github.com/Sagewiiz/TechXcelerate"
+        id: "byte-n-crypt",
+        title: "Byte-N-Crypt",
+        file: "https://raw.githubusercontent.com/Sagewiiz/Byte-N-Crypt/main/README.md",
+        icon: "i-simple-icons:python",
+        excerpt: "Encryption/crypto utilities and experiments.",
+        link: "https://github.com/Sagewiiz/Byte-N-Crypt"
       },
       {
         id: "dataflow",

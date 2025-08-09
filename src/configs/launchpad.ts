@@ -32,10 +32,10 @@ const launchpadApps: LaunchpadData[] = [
     link: "https://github.com/Sagewiiz/Portfolio"
   },
   {
-    id: "techxcelerate",
-    title: "TechXcelerate",
+    id: "byte-n-crypt",
+    title: "Byte-N-Crypt",
     img: "img/icons/launchpad/oh-vue-icons.png",
-    link: "https://github.com/Sagewiiz/TechXcelerate"
+    link: "https://github.com/Sagewiiz/Byte-N-Crypt"
   }
 ];
 

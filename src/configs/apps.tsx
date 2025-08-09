@@ -10,6 +10,8 @@ const FaceTimeApp = lazy(() => import("~/components/apps/FaceTime"));
 const TerminalApp = lazy(() => import("~/components/apps/Terminal"));
 const NotesApp = lazy(() => import("~/components/apps/Notes"));
 const CalculatorApp = lazy(() => import("~/components/apps/Calculator"));
+const GamesApp = lazy(() => import("~/components/apps/Games"));
+const MusicApp = lazy(() => import("~/components/apps/Music"));
 
 const withSuspense = (el: JSX.Element) => (
   <Suspense fallback={<div className="p-4 text-sm">Loading…</div>}>{el}</Suspense>
@@ -87,6 +89,15 @@ const apps: AppsData[] = [
     content: withSuspense(<TerminalApp />)
   },
   {
+    id: "music",
+    title: "Music",
+    desktop: true,
+    width: 900,
+    height: 560,
+    img: "img/icons/music.svg",
+    content: withSuspense(<MusicApp />)
+  },
+  {
     id: "notes",
     title: "Notes",
     desktop: true,
@@ -100,9 +111,18 @@ const apps: AppsData[] = [
     title: "Calculator",
     desktop: true,
     width: 320,
-    height: 420,
-    img: "img/icons/launchpad/meta.png",
+    height: 560,
+    img: "img/icons/calculator.svg",
     content: withSuspense(<CalculatorApp />)
+  },
+  {
+    id: "games",
+    title: "Games",
+    desktop: true,
+    width: 900,
+    height: 620,
+    img: "img/icons/launchpad/zelda.png",
+    content: withSuspense(<GamesApp />)
   },
   {
     id: "github",
