@@ -1,6 +1,6 @@
 import React from "react";
-import Slider from "react-rangeslider";
-import "react-rangeslider/lib/index.css";
+import RcSlider from "rc-slider";
+import "rc-slider/assets/index.css";
 import { music } from "~/configs";
 
 interface SliderProps {
@@ -14,14 +14,9 @@ const SliderComponent = ({ icon, value, setValue }: SliderProps) => (
     <div className="size-7 flex-center bg-c-100" border="t l b c-300 rounded-l-full">
       <span className={icon} aria-hidden="true" />
     </div>
-    <Slider
-      min={1}
-      max={100}
-      value={value}
-      tooltip={false}
-      orientation="horizontal"
-      onChange={(v: number) => setValue(v)}
-    />
+    <div className="flex-1 px-2">
+      <RcSlider min={1} max={100} value={value} onChange={(v: number) => setValue(v)} />
+    </div>
   </div>
 );
 
