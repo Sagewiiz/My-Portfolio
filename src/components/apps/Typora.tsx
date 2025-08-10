@@ -39,16 +39,19 @@ const MilkdownEditor = () => {
             ) as HTMLDivElement;
             wrapper.onclick = () => editor?.focus();
           })
-           .markdownUpdated(async (_, markdown) => {
-             setTyporaMd(markdown);
-             if (token) {
-               await fetch(`/api/content?app=typora`, {
-                 method: "PUT",
-                 headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                 body: JSON.stringify({ content: markdown })
-               });
-             }
-           });
+          .markdownUpdated(async (_, markdown) => {
+            setTyporaMd(markdown);
+            if (token) {
+              await fetch(`/api/content?app=typora`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ content: markdown })
+              });
+            }
+          });
 
         root.className =
           "typora bg-white dark:bg-gray-800 text-c-700 h-full overflow-y-scroll";
@@ -65,8 +68,13 @@ const MilkdownEditor = () => {
 export default function Typora() {
   return (
     <PasswordGate>
-      {({ token, profileId }) => (
+      {({ token, profileId, logout }) => (
         <MilkdownProvider>
+          <div className="p-1 text-right text-xs">
+            <button className="safari-btn w-20" onClick={logout}>
+              Lock
+            </button>
+          </div>
           <MilkdownEditor />
         </MilkdownProvider>
       )}

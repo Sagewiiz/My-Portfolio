@@ -1,12 +1,16 @@
 import React from "react";
 
 interface GateProps {
-  children: (ctx: { token: string; profileId: string }) => JSX.Element;
+  children: (ctx: {
+    token: string;
+    profileId: string;
+    logout: () => void;
+  }) => JSX.Element;
 }
 
 export default function PasswordGate({ children }: GateProps) {
-  const [token, setToken] = useState<string | null>(sessionStorage.getItem("auth_token"));
-  const [profileId, setProfileId] = useState<string | null>(sessionStorage.getItem("profile_id"));
+  const [token, setToken] = useState<string | null>(null);
+  const [profileId, setProfileId] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -20,13 +24,16 @@ export default function PasswordGate({ children }: GateProps) {
       });
       const data = await resp.json();
       if (!resp.ok) throw new Error(data.error || "Unlock failed");
-      sessionStorage.setItem("auth_token", data.token);
-      sessionStorage.setItem("profile_id", data.profileId);
       setToken(data.token);
       setProfileId(data.profileId);
     } catch (e: any) {
       setError(e.message);
     }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setProfileId(null);
   };
 
   if (!token || !profileId) {
@@ -51,7 +58,5 @@ export default function PasswordGate({ children }: GateProps) {
     );
   }
 
-  return children({ token, profileId });
+  return children({ token, profileId, logout });
 }
-
-
