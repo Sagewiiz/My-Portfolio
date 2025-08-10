@@ -6,21 +6,29 @@ import { history } from "@milkdown/plugin-history";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
 import PasswordGate from "~/components/PasswordGate";
 
-const MilkdownEditor = () => {
+type SaveStatus = "idle" | "syncing" | "saved" | "error";
+
+const MilkdownEditor = ({ token }: { token: string }) => {
   const { typoraMd, setTyporaMd } = useStore((state) => ({
     typoraMd: state.typoraMd,
     setTyporaMd: state.setTyporaMd
   }));
-  const token = sessionStorage.getItem("auth_token");
+  const [status, setStatus] = useState<SaveStatus>("idle");
 
   useEffect(() => {
     const load = async () => {
       if (!token) return;
-      const resp = await fetch(`/api/content?app=typora`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await resp.json();
-      if (data.content) setTyporaMd(data.content);
+      try {
+        setStatus("syncing");
+        const resp = await fetch(`/api/content?app=typora`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await resp.json();
+        if (data.content) setTyporaMd(data.content);
+        setStatus("saved");
+      } catch {
+        setStatus("error");
+      }
     };
     load();
   }, [token, setTyporaMd]);
@@ -42,14 +50,21 @@ const MilkdownEditor = () => {
           .markdownUpdated(async (_, markdown) => {
             setTyporaMd(markdown);
             if (token) {
-              await fetch(`/api/content?app=typora`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ content: markdown })
-              });
+              try {
+                setStatus("syncing");
+                const resp = await fetch(`/api/content?app=typora`, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                  },
+                  body: JSON.stringify({ content: markdown })
+                });
+                if (!resp.ok) throw new Error("save failed");
+                setStatus("saved");
+              } catch {
+                setStatus("error");
+              }
             }
           });
 
@@ -62,7 +77,20 @@ const MilkdownEditor = () => {
       .use(history)
   );
 
-  return <Milkdown />;
+  return (
+    <div className="h-full w-full flex flex-col">
+      <div className="p-1 px-2 flex items-center justify-between text-xs">
+        <div>
+          {status === "syncing" && <span className="text-amber-600">Syncing…</span>}
+          {status === "saved" && <span className="text-emerald-600">Saved</span>}
+          {status === "error" && <span className="text-red-600">Error</span>}
+        </div>
+      </div>
+      <div className="flex-1 min-h-0">
+        <Milkdown />
+      </div>
+    </div>
+  );
 };
 
 export default function Typora() {
@@ -75,7 +103,7 @@ export default function Typora() {
               Lock
             </button>
           </div>
-          <MilkdownEditor />
+          <MilkdownEditor token={token} />
         </MilkdownProvider>
       )}
     </PasswordGate>

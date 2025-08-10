@@ -20,6 +20,7 @@ declare global {
   const MenuItemGroup: typeof import('./components/menus/base')['MenuItemGroup']
   const Music: typeof import('./components/apps/Music')['default']
   const Notes: typeof import('./components/apps/Notes')['default']
+  const PasswordGate: typeof import('./components/PasswordGate')['default']
   const RandomMlFact: typeof import('./components/RandomMlFact')['default']
   const Safari: typeof import('./components/apps/Safari')['default']
   const Spotlight: typeof import('./components/Spotlight')['default']
