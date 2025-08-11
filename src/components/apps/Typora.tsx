@@ -22,6 +22,8 @@ const MilkdownEditor = ({
     setTyporaMd: state.setTyporaMd
   }));
   const [status, setStatus] = useState<SaveStatus>("idle");
+  const [initialMd, setInitialMd] = useState<string | null>(null);
+  const [canSave, setCanSave] = useState<boolean>(false);
 
   useEffect(() => {
     const load = async () => {
@@ -29,24 +31,28 @@ const MilkdownEditor = ({
       try {
         setStatus("syncing");
         onStatusChange("syncing");
+        let content = "";
         if (token === "dev-token") {
           const ls = localStorage.getItem(`typora:${profileId}`);
-          if (ls != null) setTyporaMd(ls);
-          setStatus("saved");
-          onStatusChange("saved");
-          return;
+          content = ls ?? "";
+        } else {
+          const resp = await fetch(`/api/content?app=typora`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (!resp.ok) throw new Error("load failed");
+          const data = await resp.json();
+          content = data.content ?? "";
         }
-        const resp = await fetch(`/api/content?app=typora`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (!resp.ok) throw new Error("load failed");
-        const data = await resp.json();
-        if (data.content) setTyporaMd(data.content);
+        setTyporaMd(content);
+        setInitialMd(content);
         setStatus("saved");
         onStatusChange("saved");
+        // enable saves only after initial content is applied
+        setCanSave(true);
       } catch {
         setStatus("error");
         onStatusChange("error");
+        setInitialMd("");
       }
     };
     load();
@@ -56,7 +62,7 @@ const MilkdownEditor = ({
     Editor.make()
       .config((ctx) => {
         ctx.set(rootCtx, root);
-        ctx.set(defaultValueCtx, typoraMd);
+        ctx.set(defaultValueCtx, initialMd ?? typoraMd);
         ctx
           .get(listenerCtx)
           .mounted((ctx) => {
@@ -67,6 +73,7 @@ const MilkdownEditor = ({
             wrapper.onclick = () => editor?.focus();
           })
           .markdownUpdated(async (_, markdown) => {
+            if (!canSave) return; // avoid overwriting server with default before load
             setTyporaMd(markdown);
             if (token) {
               try {
@@ -105,6 +112,13 @@ const MilkdownEditor = ({
       .use(history)
   );
 
+  if (initialMd === null) {
+    return (
+      <div className="h-full w-full flex items-center justify-center text-xs">
+        Loading…
+      </div>
+    );
+  }
   return (
     <div className="h-full w-full flex flex-col">
       <div className="flex-1 min-h-0">

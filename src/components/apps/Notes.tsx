@@ -15,6 +15,7 @@ function NotesInner({
   const [text, setText] = useState<string>("Loading…");
   const [status, setStatus] = useState<SaveStatus>("idle");
 
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const load = async () => {
       try {
@@ -23,6 +24,7 @@ function NotesInner({
           const ls = localStorage.getItem(`notes:${profileId}`);
           setText(ls ?? "# Notes\n\nWrite anything here.");
           setStatus("saved");
+          setLoaded(true);
           return;
         }
         const resp = await fetch(`/api/content?app=notes`, {
@@ -32,8 +34,10 @@ function NotesInner({
         const data = await resp.json();
         setText(data.content || "# Notes\n\nWrite anything here.");
         setStatus("saved");
+        setLoaded(true);
       } catch {
         setStatus("error");
+        setLoaded(true);
       }
     };
     load();
@@ -41,6 +45,7 @@ function NotesInner({
 
   useEffect(() => {
     if (status === "idle") return;
+    if (!loaded) return;
     const id = setTimeout(async () => {
       try {
         setStatus("syncing");
@@ -64,7 +69,7 @@ function NotesInner({
       }
     }, 500);
     return () => clearTimeout(id);
-  }, [text, token, profileId]);
+  }, [text, token, profileId, loaded]);
 
   return (
     <div className="h-full w-full bg-white dark:bg-gray-900">
