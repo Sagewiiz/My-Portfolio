@@ -69,8 +69,8 @@ const crypto = require('crypto');
 const salt = 'your-strong-salt';
 const h = (p) => crypto.scryptSync(p, salt, 64).toString('hex');
 console.log('A', h('meow'));
-console.log('B', h('lock'));
-console.log('C', h('key'));
+console.log('B', h('pass1'));
+console.log('C', h('pass2'));
 ```
 Set the outputs as `PROFILE_*_PASSWORD_HASH` values. Do not commit secrets.
 
