@@ -27,10 +27,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Authorization: `Bearer ${upstashToken}`,
         "Content-Type": "application/json"
       },
-      // Use commands array API for broader compatibility
       body: JSON.stringify({ commands: [command] })
     });
-    return resp.json() as Promise<{ result: any }>; // may be nested when using commands
+    const text = await resp.text();
+    if (!resp.ok) {
+      console.error("Upstash error", resp.status, text);
+      throw new Error(`Upstash ${resp.status}`);
+    }
+    try {
+      return JSON.parse(text) as { result: any };
+    } catch {
+      return { result: text } as any;
+    }
   };
 
   if (req.method === "GET") {
@@ -43,7 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === "PUT") {
     const { content } = req.body || {};
-    await call([
+    const out = await call([
       "HSET",
       key,
       "content",
@@ -51,6 +59,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       "updatedAt",
       String(Date.now())
     ]);
+    const nested = (out as any)?.result?.[0]?.result ?? (out as any)?.result;
+    console.log("Upstash HSET result", nested);
     return res.status(200).json({ ok: true });
   }
 
