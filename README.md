@@ -16,7 +16,8 @@ An interactive portfolio that mimics the macOS desktop experience. It features a
 - Safari: start page, URL/search, or external sites via iframe
 - Terminal: fake shell with `cd`, `ls`, `cat`, history, autocomplete
 - Bear: Markdown reader (local/remote)
-- Typora: WYSIWYG Markdown editor (Milkdown)
+- Typora: WYSIWYG Markdown editor (demo only; for persistent notes use Notes)
+- Notes: password‑gated, persistent editor with Upstash Redis
 - FaceTime: Webcam capture (saves thumbnails)
 - VSCode: Repo viewer (GitHub1s)
 
@@ -51,8 +52,27 @@ npm run build
 - Music (Control Center): `src/configs/music.ts`.
 - About/Stats pages: markdown in `public/markdown/`.
 
-### Deployment
-This is a static SPA. Deploy the `dist` folder to your provider of choice (Vercel). Ensure Vite base is set if deploying under a subpath.
+### Deployment (Vercel)
+This SPA deploys cleanly on Vercel (no server required for the UI). Two serverless routes power Notes persistence and unlocking:
+- `/api/unlock`: verifies a password and returns a JWT (Edge/Node function)
+- `/api/content`: load/save content to Upstash Redis
+
+Required env vars (Production & Preview):
+- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
+- `JWT_SECRET` (random string)
+- `PASSWORD_SALT` (random string used for hashing)
+- `PROFILE_A_PASSWORD_HASH`, `PROFILE_B_PASSWORD_HASH`, `PROFILE_C_PASSWORD_HASH`
+
+Generate hashes (Node REPL):
+```js
+const crypto = require('crypto');
+const salt = 'your-strong-salt';
+const h = (p) => crypto.scryptSync(p, salt, 64).toString('hex');
+console.log('A', h('meow'));
+console.log('B', h('lock'));
+console.log('C', h('key'));
+```
+Set the outputs as `PROFILE_*_PASSWORD_HASH` values. Do not commit secrets.
 
 ### License
 MIT

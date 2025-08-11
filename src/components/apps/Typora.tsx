@@ -140,7 +140,7 @@ export default function Typora() {
           {status === "error" && <span className="text-red-600">Error</span>}
         </div>
       </div>
-      <div className="px-2 py-1 text-xs text-c-600">
+      <div className="sticky top-0 z-10 px-3 py-1.5 text-xs leading-5 text-c-700 bg-c-100/90 dark:bg-gray-800/80 backdrop-blur border-b border-c-300">
         For using "DontPad" like features use Notes, or to leave a message for me use
         password "meow" in Notes.
       </div>
