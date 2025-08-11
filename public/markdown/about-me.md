@@ -14,4 +14,4 @@ My interests include LLMs, multimodal systems, classic ML, computer vision, and 
 
 ## Résumé
 
-- Download my résumé: [PDF](https://drive.google.com/file/d/1OiotJl1hlOJgqfNwGdzoiC5y19xccz_i/view?usp=sharing)
+- Download my résumé: [Folder](https://drive.google.com/drive/folders/1VCX820q8jk23GsML2g_oHtRoImdjrnMT)

@@ -4,7 +4,7 @@ import { commonmark } from "@milkdown/preset-commonmark";
 import { gfm } from "@milkdown/preset-gfm";
 import { history } from "@milkdown/plugin-history";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
-import PasswordGate from "~/components/PasswordGate";
+// Typora is now read-only demo. Use Notes app for editable/persistent pad.
 
 type SaveStatus = "idle" | "syncing" | "saved" | "error";
 
@@ -129,28 +129,26 @@ const MilkdownEditor = ({
 };
 
 export default function Typora() {
+  // Public demo: no lock; no persistence. Show hint to use Notes.
   const [status, setStatus] = useState<SaveStatus>("idle");
   return (
-    <PasswordGate>
-      {({ token, profileId, logout }) => (
-        <MilkdownProvider>
-          <div className="p-1 px-2 flex items-center justify-between text-xs bg-c-200">
-            <div>
-              {status === "syncing" && <span className="text-amber-600">Syncing…</span>}
-              {status === "saved" && <span className="text-emerald-600">Saved</span>}
-              {status === "error" && <span className="text-red-600">Error</span>}
-            </div>
-            <button className="safari-btn w-20" onClick={logout}>
-              Lock
-            </button>
-          </div>
-          <MilkdownEditor
-            token={token}
-            profileId={profileId}
-            onStatusChange={setStatus}
-          />
-        </MilkdownProvider>
-      )}
-    </PasswordGate>
+    <MilkdownProvider>
+      <div className="p-1 px-2 flex items-center justify-between text-xs bg-c-200">
+        <div>
+          {status === "syncing" && <span className="text-amber-600">Syncing…</span>}
+          {status === "saved" && <span className="text-emerald-600">Saved</span>}
+          {status === "error" && <span className="text-red-600">Error</span>}
+        </div>
+      </div>
+      <div className="px-2 py-1 text-xs text-c-600">
+        For using "DontPad" like features use Notes, or to leave a message for me use
+        password "meow" in Notes.
+      </div>
+      <MilkdownEditor
+        token={"dev-token"}
+        profileId={"public"}
+        onStatusChange={setStatus}
+      />
+    </MilkdownProvider>
   );
 }
