@@ -19,9 +19,16 @@ function NotesInner({
     const load = async () => {
       try {
         setStatus("syncing");
+        if (token === "dev-token") {
+          const ls = localStorage.getItem(`notes:${profileId}`);
+          setText(ls ?? "# Notes\n\nWrite anything here.");
+          setStatus("saved");
+          return;
+        }
         const resp = await fetch(`/api/content?app=notes`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+        if (!resp.ok) throw new Error("load failed");
         const data = await resp.json();
         setText(data.content || "# Notes\n\nWrite anything here.");
         setStatus("saved");
@@ -37,16 +44,21 @@ function NotesInner({
     const id = setTimeout(async () => {
       try {
         setStatus("syncing");
-        const resp = await fetch(`/api/content?app=notes`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ content: text })
-        });
-        if (!resp.ok) throw new Error("save failed");
-        setStatus("saved");
+        if (token === "dev-token") {
+          localStorage.setItem(`notes:${profileId}`, text);
+          setStatus("saved");
+        } else {
+          const resp = await fetch(`/api/content?app=notes`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ content: text })
+          });
+          if (!resp.ok) throw new Error("save failed");
+          setStatus("saved");
+        }
       } catch {
         setStatus("error");
       }

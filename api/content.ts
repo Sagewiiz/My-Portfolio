@@ -27,24 +27,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Authorization: `Bearer ${upstashToken}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ command })
+      // Use commands array API for broader compatibility
+      body: JSON.stringify({ commands: [command] })
     });
-    return resp.json() as Promise<{ result: any }>; // result may be string | null
+    return resp.json() as Promise<{ result: any }>; // may be nested when using commands
   };
 
   if (req.method === "GET") {
     const out = await call(["HGET", key, "content"]);
-    const content = (out.result as string) || "";
+    // Upstash returns { result: [{ result: "..." }] } when using commands
+    const nested = out?.result?.[0]?.result;
+    const content = (nested ?? out?.result ?? "") as string;
     return res.status(200).json({ content });
   }
 
   if (req.method === "PUT") {
     const { content } = req.body || {};
-    await call(["HSET", key, "content", String(content), "updatedAt", String(Date.now())]);
+    await call([
+      "HSET",
+      key,
+      "content",
+      String(content),
+      "updatedAt",
+      String(Date.now())
+    ]);
     return res.status(200).json({ ok: true });
   }
 
   return res.status(405).json({ error: "Method not allowed" });
 }
-
-
