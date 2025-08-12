@@ -1,4 +1,6 @@
 import React from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { createRoot } from "react-dom/client";
 
 import Desktop from "~/pages/Desktop";
@@ -85,7 +87,9 @@ export default function App() {
               <span className="i-ri:close-line" />
             </button>
             <div className="text-xl font-semibold">Use/Open in Laptop for experince</div>
-            <div className="text-sm opacity-80 mt-1">This site is optimized for larger screens.</div>
+            <div className="text-sm opacity-80 mt-1">
+              This site is optimized for larger screens.
+            </div>
           </div>
         </div>
       )}
@@ -99,5 +103,7 @@ const root = createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <App />
+    <Analytics />
+    <SpeedInsights />
   </React.StrictMode>
 );
